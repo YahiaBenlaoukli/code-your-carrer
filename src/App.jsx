@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import Header from './components/Header'
 import Navigation from './components/Navigation'
+import LandingPage from './pages/LandingPage'
 import AuthScreen from './pages/AuthScreen'
 import InitialScreen from './pages/InitialScreen'
 import Dashboard from './pages/Dashboard'
@@ -26,7 +27,7 @@ function AppContent() {
               currentUser ? (
                 <Navigate to="/dashboard" replace />
               ) : (
-                <Navigate to="/auth" replace />
+                <LandingPage />
               )
             } 
           />

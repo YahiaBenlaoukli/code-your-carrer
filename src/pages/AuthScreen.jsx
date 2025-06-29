@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
-import { Mail, Lock, User, Eye, EyeOff } from 'lucide-react'
+import { Mail, Lock, User, Eye, EyeOff, ArrowLeft } from 'lucide-react'
 
 function AuthScreen() {
   const [isLogin, setIsLogin] = useState(true)
@@ -11,6 +12,7 @@ function AuthScreen() {
   const [isLoading, setIsLoading] = useState(false)
   
   const { login, register } = useAuth()
+  const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
     name: '',
@@ -62,9 +64,14 @@ function AuthScreen() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       <div className="w-full max-w-md">
-        <div className="card">
+        {/* Back to Home Button */}
+        <div className="mb-8">
+          
+        </div>
+
+        <div className="card shadow-xl">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gradient mb-2">
               {isLogin ? 'Welcome Back' : 'Create Account'}
