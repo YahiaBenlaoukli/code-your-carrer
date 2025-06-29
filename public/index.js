@@ -174,8 +174,9 @@
             // Load previous CV analysis if exists
             const cvAnalysis = authManager.getUserCVAnalysis();
             if (cvAnalysis) {
-                // Could restore previous analysis here
-                console.log('Previous CV analysis found');
+                // Populate the analysis in the UI
+                populateCVAnalysis(cvAnalysis);
+                console.log('Previous CV analysis loaded');
             }
         }
 
@@ -341,6 +342,9 @@
                     ...analysis
                 });
                 
+                // Populate CV analysis in the HTML
+                populateCVAnalysis(analysis);
+                
                 // Hide loading screen and show dashboard
                 loadingScreen.classList.remove('show');
                 dashboard.classList.add('show');
@@ -350,6 +354,93 @@
                 loadingScreen.classList.remove('show');
                 initialScreen.classList.add('show');
             });
+        }
+
+        // Function to populate CV analysis with Gemini data
+        function populateCVAnalysis(analysis) {
+            // Update strengths
+            const strengthsCard = document.querySelector('.analysis-card:nth-child(2)');
+            if (strengthsCard && analysis.strengths) {
+                const strengthsList = analysis.strengths.map(strength => `<li>${strength}</li>`).join('');
+                strengthsCard.innerHTML = `
+                    <h3>🎯 Strengths</h3>
+                    <ul>
+                        ${strengthsList}
+                    </ul>
+                `;
+            }
+
+            // Update improvements
+            const improvementsCard = document.querySelector('.analysis-card:nth-child(3)');
+            if (improvementsCard && analysis.improvements) {
+                const improvementsList = analysis.improvements.map(improvement => `<li>${improvement}</li>`).join('');
+                improvementsCard.innerHTML = `
+                    <h3>⚠️ Areas for Improvement</h3>
+                    <ul>
+                        ${improvementsList}
+                    </ul>
+                `;
+            }
+
+            // Update suggestions
+            const suggestionsCard = document.querySelector('.analysis-card:nth-child(4)');
+            if (suggestionsCard && analysis.suggestions) {
+                const suggestionsList = analysis.suggestions.map(suggestion => `<li>${suggestion}</li>`).join('');
+                suggestionsCard.innerHTML = `
+                    <h3>💡 Suggestions</h3>
+                    <ul>
+                        ${suggestionsList}
+                    </ul>
+                `;
+            }
+
+            // Update match score
+            const matchScoreCard = document.querySelector('.analysis-card:nth-child(5)');
+            if (matchScoreCard && analysis.matchScore) {
+                matchScoreCard.innerHTML = `
+                    <h3>📊 Match Score</h3>
+                    <p>Your profile matches <strong style="color: #10b981; font-size: 1.1rem;">${analysis.matchScore}%</strong> of relevant positions in your field.</p>
+                    ${analysis.experienceLevel ? `<p><strong>Experience Level:</strong> ${analysis.experienceLevel}</p>` : ''}
+                `;
+            }
+
+            // Update key skills if available
+            if (analysis.keySkills && analysis.keySkills.length > 0) {
+                const skillsList = analysis.keySkills.map(skill => `<span class="skill-tag">${skill}</span>`).join('');
+                const skillsSection = document.createElement('div');
+                skillsSection.className = 'analysis-card';
+                skillsSection.innerHTML = `
+                    <h3>🔧 Key Skills</h3>
+                    <div class="skills-list">
+                        ${skillsList}
+                    </div>
+                `;
+                
+                // Insert skills section after strengths
+                const strengthsCard = document.querySelector('.analysis-card:nth-child(2)');
+                if (strengthsCard) {
+                    strengthsCard.parentNode.insertBefore(skillsSection, strengthsCard.nextSibling);
+                }
+            }
+
+            // Update recommended roles if available
+            if (analysis.recommendedRoles && analysis.recommendedRoles.length > 0) {
+                const rolesList = analysis.recommendedRoles.map(role => `<li>${role}</li>`).join('');
+                const rolesSection = document.createElement('div');
+                rolesSection.className = 'analysis-card';
+                rolesSection.innerHTML = `
+                    <h3>🎯 Recommended Roles</h3>
+                    <ul>
+                        ${rolesList}
+                    </ul>
+                `;
+                
+                // Insert roles section after suggestions
+                const suggestionsCard = document.querySelector('.analysis-card:nth-child(4)');
+                if (suggestionsCard) {
+                    suggestionsCard.parentNode.insertBefore(rolesSection, suggestionsCard.nextSibling);
+                }
+            }
         }
 
         // Apply button functionality
