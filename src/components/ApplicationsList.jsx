@@ -1,79 +1,70 @@
 import React from 'react'
+import './ApplicationsList.css'
 import { Calendar, MapPin, Building } from 'lucide-react'
 
 function ApplicationsList({ applications }) {
-  const getStatusColor = (status) => {
+  const getStatusClass = (status) => {
     switch (status.toLowerCase()) {
       case 'applied':
-        return 'bg-blue-100 text-blue-800'
+        return 'status-applied'
       case 'reviewing':
-        return 'bg-yellow-100 text-yellow-800'
+        return 'status-reviewing'
       case 'interview':
-        return 'bg-purple-100 text-purple-800'
+        return 'status-interview'
       case 'accepted':
-        return 'bg-green-100 text-green-800'
+        return 'status-accepted'
       case 'rejected':
-        return 'bg-red-100 text-red-800'
+        return 'status-rejected'
       default:
-        return 'bg-secondary-100 text-secondary-800'
+        return 'status-default'
     }
   }
 
   return (
-    <div className="panel">
+    <div className="applications-list">
       <h2 className="text-xl font-semibold text-secondary-800 mb-6 flex items-center">
         <Calendar size={20} className="mr-2 text-primary-600" />
         Your Applications
       </h2>
 
       {applications.length === 0 ? (
-        <div className="text-center py-8">
-          <div className="text-secondary-400 mb-4">
-            <Calendar size={48} className="mx-auto" />
-          </div>
-          <p className="text-secondary-600 mb-2">
-            No applications yet
-          </p>
-          <p className="text-secondary-500 text-sm">
-            Apply to jobs to see them here!
-          </p>
+        <div className="empty-state">
+          <div className="empty-icon">📋</div>
+          <p className="empty-title">No applications yet</p>
+          <p className="empty-subtitle">Apply to jobs to see them here!</p>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="applications-grid">
           {applications.map((application) => (
             <div
               key={application.id}
-              className="border border-secondary-200 rounded-lg p-4 hover:shadow-md transition-shadow duration-200"
+              className="application-card"
             >
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <h3 className="font-semibold text-secondary-800 text-lg mb-2">
+              <div className="application-content">
+                <div className="application-info">
+                  <h3 className="application-title">
                     {application.jobTitle}
                   </h3>
                   
-                  <div className="flex items-center space-x-4 text-sm text-secondary-600 mb-3">
-                    <div className="flex items-center">
-                      <Building size={14} className="mr-1" />
+                  <div className="application-meta">
+                    <div className="application-company">
+                      <span className="meta-icon">🏢</span>
                       {application.company}
                     </div>
-                    <div className="flex items-center">
-                      <MapPin size={14} className="mr-1" />
+                    <div className="application-location">
+                      <span className="meta-icon">📍</span>
                       {application.location}
                     </div>
                   </div>
                   
-                  <div className="flex items-center text-xs text-secondary-500">
-                    <Calendar size={12} className="mr-1" />
+                  <div className="application-date">
+                    <span className="date-icon">📅</span>
                     Applied on {new Date(application.appliedAt).toLocaleDateString()}
                   </div>
                 </div>
                 
-                <div className="ml-4">
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
-                      application.status
-                    )}`}
-                  >
+                <div className="application-status">
+                  <span className={`status-badge ${getStatusClass(application.status)}`}>
                     {application.status}
                   </span>
                 </div>

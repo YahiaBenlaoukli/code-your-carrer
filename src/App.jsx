@@ -1,15 +1,39 @@
 import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import Header from './components/Header'
-import Navigation from './components/Navigation'
+import LandingPage from './pages/LandingPage'
 import AuthScreen from './pages/AuthScreen'
-import InitialScreen from './pages/InitialScreen'
 import Dashboard from './pages/Dashboard'
 import LoadingScreen from './components/LoadingScreen'
-import { AuthProvider, useAuth } from './contexts/AuthContext'
+import Header from './components/Header'
+import './App.css'
 
-function AppContent() {
-  const { currentUser, isLoading } = useAuth()
+function App() {
+  const [user, setUser] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [cvAnalysis, setCvAnalysis] = useState(null)
+
+  useEffect(() => {
+    // Check if user is logged in on app start
+    const currentUser = localStorage.getItem('currentUser')
+    if (currentUser) {
+      setUser(JSON.parse(currentUser))
+    }
+  }, [])
+
+  const handleLogin = (userData) => {
+    setUser(userData)
+    localStorage.setItem('currentUser', JSON.stringify(userData))
+  }
+
+  const handleLogout = () => {
+    setUser(null)
+    setCvAnalysis(null)
+    localStorage.removeItem('currentUser')
+  }
+
+  const handleCVAnalysis = (analysis) => {
+    setCvAnalysis(analysis)
+  }
 
   if (isLoading) {
     return <LoadingScreen />
@@ -17,61 +41,48 @@ function AppContent() {
 
   return (
     <Router>
-      <div className="min-h-screen">
-        {currentUser && <Header />}
+      <div className="App">
+        {user && <Header user={user} onLogout={handleLogout} />}
+        
         <Routes>
           <Route 
             path="/" 
             element={
-              currentUser ? (
+              user ? (
                 <Navigate to="/dashboard" replace />
               ) : (
-                <Navigate to="/auth" replace />
+                <LandingPage />
               )
             } 
           />
           <Route 
             path="/auth" 
             element={
-              currentUser ? (
+              user ? (
                 <Navigate to="/dashboard" replace />
               ) : (
-                <AuthScreen />
-              )
-            } 
-          />
-          <Route 
-            path="/upload" 
-            element={
-              currentUser ? (
-                <InitialScreen />
-              ) : (
-                <Navigate to="/auth" replace />
+                <AuthScreen onLogin={handleLogin} />
               )
             } 
           />
           <Route 
             path="/dashboard" 
             element={
-              currentUser ? (
-                <Dashboard />
+              user ? (
+                <Dashboard 
+                  user={user}
+                  cvAnalysis={cvAnalysis}
+                  onCVAnalysis={handleCVAnalysis}
+                  setIsLoading={setIsLoading}
+                />
               ) : (
                 <Navigate to="/auth" replace />
               )
             } 
           />
         </Routes>
-        {currentUser && <Navigation />}
       </div>
     </Router>
-  )
-}
-
-function App() {
-  return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
   )
 }
 

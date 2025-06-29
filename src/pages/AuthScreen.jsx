@@ -1,206 +1,233 @@
 import React, { useState } from 'react'
-import { useAuth } from '../contexts/AuthContext'
-import { Mail, Lock, User, Eye, EyeOff } from 'lucide-react'
+import './AuthScreen.css'
 
-function AuthScreen() {
+const AuthScreen = ({ onLogin }) => {
   const [isLogin, setIsLogin] = useState(true)
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [error, setError] = useState('')
-  const [success, setSuccess] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  
-  const { login, register } = useAuth()
-
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
     confirmPassword: ''
   })
+  const [errors, setErrors] = useState({})
+  const [success, setSuccess] = useState('')
 
   const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    })
-    setError('')
-    setSuccess('')
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setError('')
-    setSuccess('')
-
-    try {
-      if (isLogin) {
-        await login(formData.email, formData.password)
-        setSuccess('Login successful!')
-      } else {
-        if (formData.password !== formData.confirmPassword) {
-          throw new Error('Passwords do not match')
-        }
-        await register(formData.name, formData.email, formData.password)
-        setSuccess('Account created successfully! Please log in.')
-        setIsLogin(true)
-        setFormData({ name: '', email: '', password: '', confirmPassword: '' })
-      }
-    } catch (err) {
-      setError(err.message)
-    } finally {
-      setIsLoading(false)
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }))
     }
   }
 
-  const toggleForm = () => {
-    setIsLogin(!isLogin)
-    setError('')
+  const validateForm = () => {
+    const newErrors = {}
+
+    if (!formData.email) {
+      newErrors.email = 'Email is required'
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Email is invalid'
+    }
+
+    if (!formData.password) {
+      newErrors.password = 'Password is required'
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters'
+    }
+
+    if (!isLogin) {
+      if (!formData.name) {
+        newErrors.name = 'Name is required'
+      }
+      if (formData.password !== formData.confirmPassword) {
+        newErrors.confirmPassword = 'Passwords do not match'
+      }
+    }
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
     setSuccess('')
-    setFormData({ name: '', email: '', password: '', confirmPassword: '' })
+    
+    if (!validateForm()) return
+
+    try {
+      if (isLogin) {
+        // Login logic
+        const users = JSON.parse(localStorage.getItem('jobFinderUsers') || '{}')
+        const user = users[formData.email]
+        
+        if (!user || user.password !== hashPassword(formData.password)) {
+          setErrors({ general: 'Invalid email or password' })
+          return
+        }
+
+        onLogin(user)
+        setSuccess('Login successful!')
+      } else {
+        // Register logic
+        const users = JSON.parse(localStorage.getItem('jobFinderUsers') || '{}')
+        
+        if (users[formData.email]) {
+          setErrors({ email: 'User already exists with this email' })
+          return
+        }
+
+        const newUser = {
+          id: Date.now().toString(),
+          name: formData.name,
+          email: formData.email,
+          password: hashPassword(formData.password),
+          createdAt: new Date().toISOString()
+        }
+
+        users[formData.email] = newUser
+        localStorage.setItem('jobFinderUsers', JSON.stringify(users))
+        
+        onLogin(newUser)
+        setSuccess('Account created successfully!')
+      }
+    } catch (error) {
+      setErrors({ general: error.message })
+    }
+  }
+
+  const hashPassword = (password) => {
+    let hash = 0
+    for (let i = 0; i < password.length; i++) {
+      const char = password.charCodeAt(i)
+      hash = ((hash << 5) - hash) + char
+      hash = hash & hash
+    }
+    return hash.toString()
+  }
+
+  const switchMode = () => {
+    setIsLogin(!isLogin)
+    setFormData({
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: ''
+    })
+    setErrors({})
+    setSuccess('')
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="card">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gradient mb-2">
-              {isLogin ? 'Welcome Back' : 'Create Account'}
-            </h1>
-            <p className="text-secondary-600">
-              {isLogin 
-                ? 'Sign in to your account' 
-                : 'Join AI Job Finder today'
-              }
-            </p>
-          </div>
+    <div className="auth-screen">
+      <div className="auth-container">
+        <div className="auth-content">
+          <h1 className="auth-title">
+            {isLogin ? 'Welcome Back' : 'Create Account'}
+          </h1>
+          <p className="auth-subtitle">
+            {isLogin 
+              ? 'Sign in to your account' 
+              : 'Join AI Job Finder today'
+            }
+          </p>
 
-          {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
-              {error}
-            </div>
+          {errors.general && (
+            <div className="error-message">{errors.general}</div>
           )}
-
           {success && (
-            <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm">
-              {success}
-            </div>
+            <div className="success-message">{success}</div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="auth-form">
             {!isLogin && (
-              <div>
-                <label className="block text-sm font-medium text-secondary-700 mb-2">
-                  Full Name
-                </label>
-                <div className="relative">
-                  <User size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-secondary-400" />
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    className="input-field pl-10"
-                    placeholder="Enter your full name"
-                    required
-                  />
-                </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="name">Full Name</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  className={`form-input ${errors.name ? 'error' : ''}`}
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                />
+                {errors.name && <span className="error-text">{errors.name}</span>}
               </div>
             )}
 
-            <div>
-              <label className="block text-sm font-medium text-secondary-700 mb-2">
-                Email
-              </label>
-              <div className="relative">
-                <Mail size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-secondary-400" />
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className="input-field pl-10"
-                  placeholder="Enter your email"
-                  required
-                />
-              </div>
+            <div className="form-group">
+              <label className="form-label" htmlFor="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                className={`form-input ${errors.email ? 'error' : ''}`}
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+              />
+              {errors.email && <span className="error-text">{errors.email}</span>}
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-secondary-700 mb-2">
-                Password
-              </label>
-              <div className="relative">
-                <Lock size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-secondary-400" />
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  name="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  className="input-field pl-10 pr-10"
-                  placeholder="Enter your password"
-                  required
-                  minLength={isLogin ? undefined : 6}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-secondary-400 hover:text-secondary-600"
-                >
-                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
+            <div className="form-group">
+              <label className="form-label" htmlFor="password">Password</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                className={`form-input ${errors.password ? 'error' : ''}`}
+                value={formData.password}
+                onChange={handleInputChange}
+                required
+                minLength={6}
+              />
+              {errors.password && <span className="error-text">{errors.password}</span>}
             </div>
 
             {!isLogin && (
-              <div>
-                <label className="block text-sm font-medium text-secondary-700 mb-2">
-                  Confirm Password
-                </label>
-                <div className="relative">
-                  <Lock size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-secondary-400" />
-                  <input
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleInputChange}
-                    className="input-field pl-10 pr-10"
-                    placeholder="Confirm your password"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-secondary-400 hover:text-secondary-600"
-                  >
-                    {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                  </button>
-                </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="confirmPassword">Confirm Password</label>
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  className={`form-input ${errors.confirmPassword ? 'error' : ''}`}
+                  value={formData.confirmPassword}
+                  onChange={handleInputChange}
+                  required
+                />
+                {errors.confirmPassword && <span className="error-text">{errors.confirmPassword}</span>}
               </div>
             )}
 
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="btn-primary w-full flex items-center justify-center space-x-2"
-            >
-              {isLoading && <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></div>}
-              <span>{isLogin ? 'Sign In' : 'Create Account'}</span>
+            <button type="submit" className="auth-btn">
+              {isLogin ? 'Sign In' : 'Create Account'}
             </button>
           </form>
 
-          <div className="mt-6 text-center">
-            <p className="text-secondary-600">
-              {isLogin ? "Don't have an account? " : "Already have an account? "}
-              <button
-                onClick={toggleForm}
-                className="text-primary-600 hover:text-primary-700 font-medium"
-              >
-                {isLogin ? 'Sign up' : 'Sign in'}
-              </button>
-            </p>
+          <div className="auth-switch">
+            {isLogin ? (
+              <>
+                Don't have an account?{' '}
+                <button type="button" onClick={switchMode} className="switch-link">
+                  Sign up
+                </button>
+              </>
+            ) : (
+              <>
+                Already have an account?{' '}
+                <button type="button" onClick={switchMode} className="switch-link">
+                  Sign in
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>

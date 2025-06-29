@@ -1,10 +1,8 @@
-import React, { useState } from 'react'
-import { useAuth } from '../contexts/AuthContext'
-import { Briefcase, MapPin, Building, CheckCircle } from 'lucide-react'
+import React, { useState } from 'react';
+import './JobRecommendations.css';
 
-function JobRecommendations() {
-  const { saveApplication } = useAuth()
-  const [appliedJobs, setAppliedJobs] = useState(new Set())
+function JobRecommendations({ onApply }) {
+  const [appliedJobs, setAppliedJobs] = useState(new Set());
 
   // Mock job data - in a real app, this would come from an API
   const jobs = [
@@ -48,72 +46,63 @@ function JobRecommendations() {
       salary: '$110k - $140k',
       skills: ['AWS', 'Docker', 'Kubernetes', 'CI/CD']
     }
-  ]
+  ];
 
-  const handleApply = async (job) => {
+  const handleApply = (job) => {
     try {
-      await saveApplication(job.id, job.title, job.company, job.location)
-      setAppliedJobs(prev => new Set([...prev, job.id]))
+      onApply(job.id, job.title, job.company, job.location);
+      setAppliedJobs(prev => new Set([...prev, job.id]));
       
-      // Show success message (you could add a toast notification here)
-      console.log(`Successfully applied to ${job.title} at ${job.company}`)
+      // Show success message
+      console.log(`Successfully applied to ${job.title} at ${job.company}`);
     } catch (error) {
-      console.error('Failed to apply:', error)
+      console.error('Failed to apply:', error);
     }
-  }
+  };
 
   return (
-    <div className="panel">
-      <h2 className="text-xl font-semibold text-secondary-800 mb-6 flex items-center">
-        <Briefcase size={20} className="mr-2 text-primary-600" />
-        Job Recommendations
-      </h2>
-
-      <div className="space-y-4">
+    <div className="job-recommendations">
+      <div className="jobs-list">
         {jobs.map((job) => {
-          const isApplied = appliedJobs.has(job.id)
+          const isApplied = appliedJobs.has(job.id);
           
           return (
             <div
               key={job.id}
-              className={`border rounded-lg p-4 transition-all duration-200 ${
-                isApplied
-                  ? 'border-green-200 bg-green-50'
-                  : 'border-secondary-200 hover:border-primary-300 hover:shadow-md'
-              }`}
+              className={`job-card ${isApplied ? 'applied' : ''}`}
             >
-              <div className="flex justify-between items-start mb-3">
-                <div className="flex-1">
-                  <h3 className="font-semibold text-secondary-800 text-lg mb-1">
+              <div className="job-header">
+                <div className="job-info">
+                  <h3 className="job-title">
                     {job.title}
                   </h3>
-                  <div className="flex items-center space-x-4 text-sm text-secondary-600 mb-2">
-                    <div className="flex items-center">
-                      <Building size={14} className="mr-1" />
+                  <div className="job-meta">
+                    <div className="job-company">
+                      <span className="meta-icon">🏢</span>
                       {job.company}
                     </div>
-                    <div className="flex items-center">
-                      <MapPin size={14} className="mr-1" />
+                    <div className="job-location">
+                      <span className="meta-icon">📍</span>
                       {job.location} ({job.type})
                     </div>
                   </div>
-                  <p className="text-secondary-700 text-sm mb-3">
+                  <p className="job-description">
                     {job.description}
                   </p>
                   
                   {/* Skills */}
-                  <div className="flex flex-wrap gap-1 mb-3">
+                  <div className="job-skills">
                     {job.skills.map((skill, index) => (
                       <span
                         key={index}
-                        className="px-2 py-1 bg-secondary-100 text-secondary-700 rounded text-xs"
+                        className="skill-badge"
                       >
                         {skill}
                       </span>
                     ))}
                   </div>
                   
-                  <p className="text-primary-600 font-medium text-sm">
+                  <p className="job-salary">
                     {job.salary}
                   </p>
                 </div>
@@ -122,15 +111,11 @@ function JobRecommendations() {
               <button
                 onClick={() => handleApply(job)}
                 disabled={isApplied}
-                className={`w-full py-2 px-4 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center space-x-2 ${
-                  isApplied
-                    ? 'bg-green-100 text-green-700 cursor-not-allowed'
-                    : 'btn-primary'
-                }`}
+                className={`apply-btn ${isApplied ? 'applied' : ''}`}
               >
                 {isApplied ? (
                   <>
-                    <CheckCircle size={16} />
+                    <span className="btn-icon">✅</span>
                     <span>Applied</span>
                   </>
                 ) : (
@@ -138,11 +123,11 @@ function JobRecommendations() {
                 )}
               </button>
             </div>
-          )
+          );
         })}
       </div>
     </div>
-  )
+  );
 }
 
-export default JobRecommendations 
+export default JobRecommendations; 
