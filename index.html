@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Job Finder</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div class="min-h-screen bg-gradient-to-br from-blue-50 to-blue-200 flex flex-col">
+      <header class="flex justify-between items-center px-8 py-6">
+        <div class="text-2xl font-bold text-blue-700">Code Your Career</div>
+        <nav>
+          <a href="#authScreen" class="text-blue-700 font-semibold hover:underline">Sign In</a>
+        </nav>
+      </header>
+      <main class="flex flex-1 flex-col items-center justify-center text-center px-4">
+        <h1 class="text-5xl md:text-6xl font-extrabold text-blue-800 mb-6 leading-tight drop-shadow-lg">
+          Unlock Your Tech Career Potential
+        </h1>
+        <p class="text-lg md:text-2xl text-blue-700 mb-8 max-w-2xl">
+          Get personalized job recommendations, analyze your CV, and track your applications—all in one place. Start your journey to your dream job today!
+        </p>
+        <a
+          href="#authScreen"
+          class="px-8 py-4 bg-blue-700 text-white rounded-full text-lg font-semibold shadow-lg hover:bg-blue-800 transition"
+        >
+          Get Started
+        </a>
+      </main>
+      <footer class="text-center py-6 text-blue-600 text-sm opacity-80">
+        &copy; <span id="year"></span> Code Your Career. All rights reserved.
+      </footer>
+    </div>
+    <script>
+      document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+    <script src="index.js"></script>
+  </body>
+</html> 

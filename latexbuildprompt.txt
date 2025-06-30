@@ -1,0 +1,37 @@
+You are a LaTeX expert. I will provide you with a JSON object containing a candidate’s resume analysis and personal info, using this schema:
+
+{
+  "personalInfo": {
+    "fullName": "John Doe",
+    "email": "john.doe@example.com",
+    "location": "City, Country",
+    "linkedin": "https://linkedin.com/in/johndoe"
+  },
+  "strengths": ["..."],
+  "improvements": ["..."],
+  "suggestions": ["..."],
+  "matchScore": 85,
+  "keySkills": ["..."],
+  "experienceLevel": "mid",
+  "recommendedRoles": ["..."]
+}
+
+Your task is to transform that JSON into a professional, cleanly styled LaTeX report (or CV) that includes:
+
+1. A title with the candidate’s name.
+2. Contact details (email, location, LinkedIn).
+3. Sections:
+   - **Match Score**: display prominently (e.g. large bold number or gauge).
+   - **Experience Level**.
+   - **Key Skills** (as a comma‑separated list or itemize).
+   - **Strengths**, **Improvements**, and **Suggestions** as three separate “itemize” lists.
+   - **Recommended Roles** as an itemize list.
+
+Use a modern LaTeX document class (e.g. `article` or a popular CV class), include section headings, consistent fonts, and a clean layout. Ensure the output is a complete `.tex` file:
+
+- Begins with `\documentclass[...]`.
+- Loads any packages needed (e.g. `geometry`, `fontawesome`, `hyperref`).
+- Defines a header/footer or title block.
+- Contains all sections populated from the JSON.
+
+**Input JSON**:

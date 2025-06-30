@@ -1,0 +1,41 @@
+You are an expert career counselor and resume analyst.
+
+Analyze the following candidate profile and return a comprehensive evaluation in **JSON** format with the following structure:
+
+{
+  "personalInfo": {
+    "fullName": "John Doe",
+    "email": "john.doe@example.com",
+    "location": "City, Country",
+    "linkedin": "https://linkedin.com/in/johndoe"
+  },
+  "strengths": ["strength1", "strength2", "strength3"],
+  "improvements": ["improvement1", "improvement2", "improvement3"],
+  "suggestions": ["suggestion1", "suggestion2", "suggestion3"],
+  "keySkills": ["skill1", "skill2", "skill3"],
+  "experienceLevel": "entry/mid/senior",
+  "recommendedRoles": ["role1", "role2", "role3"]
+}
+
+### Instructions:
+- Extract and summarize basic personal details if available (name, email, location, LinkedIn).
+- Identify 3–5 strengths based on the candidate’s resume.
+- Identify 3–5 areas of improvement.
+- Offer 3–5 actionable career suggestions.
+- Estimate a **match score** from 0 to 100 based on the resume’s overall quality.
+- List technical and soft skills found in the resume.
+- Determine **experience level** (entry / mid / senior) from years of work and roles.
+- Suggest 3 job roles that best match the candidate’s background.
+
+### Candidate Data:
+
+**Personal Information:**
+Full Name: [Paste full name here]  
+Email: [Paste email here]  
+Location: [City, Country]  
+LinkedIn: [Link if available]
+
+**Resume/CV Text:**
+"""
+[Paste resume/CV here]
+"""

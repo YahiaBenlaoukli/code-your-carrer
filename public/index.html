@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareerLift</title>
+    <link type="shet">
+    <link rel="stylesheet" href="style.css">
+</head>
+    <!-- Header (shown when logged in) -->
+    <div class="header" id="header">
+        <div class="header-logo">CareerLift</div>
+        <div class="user-info">
+            <span class="user-name" id="userName">Welcome, User!</span>
+            <button class="logout-btn" id="logoutBtn">Logout</button>
+        </div>
+    </div>
+
+    <!-- Auth Screen -->
+    <div class="auth-screen" id="authScreen">
+        <div class="auth-container">
+            <div id="loginForm">
+                <h1 class="auth-title">Welcome Back</h1>
+                <p class="auth-subtitle">Sign in to your account</p>
+                
+                <div id="authError" class="error-message"></div>
+                <div id="authSuccess" class="success-message"></div>
+                
+                <form id="loginFormElement">
+                    <div class="form-group">
+                        <label class="form-label" for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" class="form-input" required>
+                    </div>
+                    <button type="submit" class="auth-btn">Sign In</button>
+                </form>
+                
+                <div class="auth-switch">
+                    Don't have an account? <a id="showSignup">Sign up</a>
+                </div>
+            </div>
+            
+            <div id="signupForm" style="display: none;">
+                <h1 class="auth-title">Create Account</h1>
+                <p class="auth-subtitle">Join CareerLift today</p>
+                
+                <div id="signupError" class="error-message"></div>
+                <div id="signupSuccess" class="success-message"></div>
+                
+                <form id="signupFormElement">
+                    <div class="form-group">
+                        <label class="form-label" for="signupName">Full Name</label>
+                        <input type="text" id="signupName" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="signupEmail">Email</label>
+                        <input type="email" id="signupEmail" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="signupPassword">Password</label>
+                        <input type="password" id="signupPassword" class="form-input" required minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" class="form-input" required>
+                    </div>
+                    <button type="submit" class="auth-btn">Create Account</button>
+                </form>
+                
+                <div class="auth-switch">
+                    Already have an account? <a id="showLogin">Sign in</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Initial Screen -->
+    <div class="initial-screen" id="initialScreen">
+        <div class="container">
+            <h1 class="logo">Find Your Dream Job with CareerLift</h1>
+            <p class="subtitle">Upload your resume and let AI do the work</p>
+            
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">
+                    <svg width="24" height="24" fill="white" viewBox="0 0 24 24">
+                        <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                    </svg>
+                </div>
+                <div class="upload-text">Drop your CV here or click to browse</div>
+                <div class="upload-subtext">Supports PDF, DOC, DOCX files</div>
+            </div>
+            
+            <input type="file" id="fileInput" accept=".pdf,.doc,.docx" />
+        </div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div class="loading" id="loadingScreen">
+        <div class="container">
+            <div class="spinner"></div>
+            <h2>Analyzing your CV...</h2>
+            <p>Our AI is reviewing your resume and finding the best job matches</p>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard" id="dashboard">
+        <div class="container">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Your AI Job Analysis</h1>
+                <p class="dashboard-subtitle">Based on your uploaded resume</p>
+            </div>
+            
+            <div class="dashboard-content">
+                <!-- Left Panel: CV Analysis -->
+                <div class="panel">
+                    <h2 class="panel-title">
+                        <div class="panel-icon">
+                            <svg width="16" height="16" fill="white" viewBox="0 0 24 24">
+                                <path d="M9,22A1,1 0 0,1 8,21V18H4A2,2 0 0,1 2,16V4C2,2.89 2.9,2 4,2H20A2,2 0 0,1 22,4V16A2,2 0 0,1 20,18H13.9L10.2,21.71C10,21.9 9.75,22 9.5,22V22H9Z"/>
+                            </svg>
+                        </div>
+                        CV Analysis
+                    </h2>
+                    
+                    <div class="analysis-card">
+                        <h3>🎯 Strengths</h3>
+                        <p>Strong technical background with 5+ years of experience in software development. Excellent problem-solving skills and proven track record in project management.</p>
+                        <div class="skills-list">
+                            <span class="skill-tag">JavaScript</span>
+                            <span class="skill-tag">React</span>
+                            <span class="skill-tag">Node.js</span>
+                            <span class="skill-tag">Python</span>
+                        </div>
+                    </div>
+                    
+                    <div class="analysis-card">
+                        <h3>⚠️ Areas for Improvement</h3>
+                        <p>Consider adding more quantifiable achievements and metrics. Include certifications or recent training to show continuous learning.</p>
+                    </div>
+                    
+                    <div class="analysis-card">
+                        <h3>💡 Suggestions</h3>
+                        <p>Add a professional summary at the top. Include links to your portfolio or GitHub. Consider getting AWS or Google Cloud certifications.</p>
+                    </div>
+                    
+                    <div class="analysis-card">
+                        <h3>📊 Match Score</h3>
+                        <p>Your profile matches 85% of senior developer positions and 92% of full-stack developer roles in your area.</p>
+                    </div>
+                </div>
+                
+                <!-- Right Panel: Job Recommendations -->
+                <div class="panel">
+                    <div class="job-panel-header" style="display: flex; align-items: center;">
+                        <h2 class="panel-title" style="margin-bottom: 0;">
+                            <div class="panel-icon">
+                                <svg width="16" height="16" fill="white" viewBox="0 0 24 24">
+                                    <path d="M10,2H14A2,2 0 0,1 16,4V6H20A2,2 0 0,1 22,8V19A2,2 0 0,1 20,21H4C2.89,21 2,20.1 2,19V8C2,6.89 2.89,6 4,6H8V4C8,2.89 8.89,2 10,2M14,6V4H10V6H14Z"/>
+                                </svg>
+                            </div>
+                            Job Recommendations
+                        </h2>
+                    </div>
+                    <div class="search-jobs-btn-container" style="margin: 1.5rem 0 1rem 0; justify-content: flex-start;">
+                        <button id="searchJobsBtn" class="search-jobs-btn">
+                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" style="margin-right: 8px;">
+                                <path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"/>
+                            </svg>
+                            Look for Available Jobs
+                        </button>
+                    </div>
+                    
+                    <!-- Loading State -->
+                    <div id="jobsLoading" class="jobs-loading" style="display: none;">
+                        <div class="loading-spinner"></div>
+                        <p>Searching for jobs...</p>
+                    </div>
+
+                    <!-- Error State -->
+                    <div id="jobsError" class="jobs-error" style="display: none;">
+                        <p id="jobsErrorMessage"></p>
+                        <button id="retryJobsBtn" class="retry-btn">Try Again</button>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="jobsEmpty" class="jobs-empty" style="display: none;">
+                        <p>No jobs found. Try searching with different keywords.</p>
+                        <button id="searchAgainBtn" class="retry-btn">Search Again</button>
+                    </div>
+
+                    <!-- Jobs Container -->
+                    <div id="jobsContainer" class="jobs-container">
+                        <!-- Jobs will be populated here dynamically -->
+                    </div>
+                </div>
+
+                <!-- LaTeX CV Generator Section -->
+                <div class="panel" id="latexCVGenerator" style="display: none;">
+                    <h2 class="panel-title">
+                        <div class="panel-icon">
+                            <svg width="16" height="16" fill="white" viewBox="0 0 24 24">
+                                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                            </svg>
+                        </div>
+                        Generate Professional CV
+                    </h2>
+                    
+                    <div class="latex-generator-content">
+                        <div class="latex-generator-info">
+                            <div class="latex-icon">
+                                <svg width="48" height="48" fill="#3b82f6" viewBox="0 0 24 24">
+                                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                                </svg>
+                            </div>
+                            <h3>Create Professional CV</h3>
+                            <p>Generate a professional CV using your analysis data. The system creates LaTeX source that downloads automatically.</p>
+                        </div>
+
+                        <div id="latexError" class="error-message" style="display: none;"></div>
+                        <div id="latexSuccess" class="success-message" style="display: none;"></div>
+
+                        <div class="latex-buttons">
+                            <button id="generateCvBtn" class="btn-primary">
+                                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" style="margin-right: 8px;">
+                                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                                </svg>
+                                Generate Professional CV
+                            </button>
+                            <button id="downloadAgainBtn" class="btn-secondary" style="display: none;">
+                                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" style="margin-right: 8px;">
+                                    <path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/>
+                                </svg>
+                                Download Again
+                            </button>
+                        </div>
+
+                        <div class="latex-info">
+                            <p>💡 LaTeX file can be compiled with any LaTeX editor</p>
+                            <p>📋 PDF is ready to use immediately</p>
+                            <p>🎨 Uses moderncv class for professional formatting</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Saved Applications Panel -->
+                <div class="saved-applications">
+                    <h2 class="panel-title">
+                        <div class="panel-icon">
+                            <svg width="16" height="16" fill="white" viewBox="0 0 24 24">
+                                <path d="M17,3H7A2,2 0 0,0 5,5V21L12,18L19,21V5C19,3.89 18.1,3 17,3Z"/>
+                            </svg>
+                        </div>
+                        Your Applications
+                    </h2>
+                    <div id="applicationsList">
+                        <p style="color: #6b7280; text-align: center; padding: 2rem;">No applications yet. Apply to jobs to see them here!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="index.js"></script>
+    <script>
+document.querySelectorAll('a[href="index.html"]').forEach(btn => {
+  btn.addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('transitionLoader').style.display = 'flex';
+    setTimeout(() => {
+      window.location.href = 'index.html';
+    }, 1200); // 1.2 seconds for the transition
+  });
+});
+</script>
+</body>
+</html>
